@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RabahDj</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Tahoma,Arial,sans-serif; text-decoration:none; }
+:root {
+  --bg:#0d1b2a; --bg2:#1a2a3a; --accent:#4fc3f7; --text:#ffffff; --text2:#aac4dd;
+}
+body { background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:90px; overflow-x:hidden; opacity:0; transition:opacity 0.3s; }
+body.loaded { opacity:1; }
+
+/* HEADER */
+.header { text-align:center; padding:40px 20px 20px; }
+.logo h1 { font-size:2.8rem; font-weight:900; color:#fff; }
+.logo h1 span { color:var(--accent); }
+.underline-logo { width:120px; height:3px; background:linear-gradient(90deg,var(--accent),transparent); margin:8px auto; border-radius:2px; }
+.slogan { color:var(--accent); font-size:1rem; margin-top:6px; }
+.info-bar { display:flex; align-items:center; justify-content:center; gap:8px; color:var(--text2); font-size:0.85rem; padding:4px 20px; text-align:center; }
+.info-bar.sub { font-size:0.78rem; color:#667; margin-bottom:16px; }
+
+/* GRID */
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; padding:0 16px 20px; }
+.card { border-radius:20px; padding:30px 15px 20px; display:flex; flex-direction:column; align-items:center; gap:14px; cursor:pointer; transition:transform 0.2s; position:relative; overflow:hidden; }
+.card:active { transform:scale(0.96); }
+.card-icon { width:70px; height:70px; border-radius:18px; display:flex; align-items:center; justify-content:center; font-size:2rem; color:#fff; background:rgba(255,255,255,0.15); box-shadow:0 4px 15px rgba(0,0,0,0.3); }
+.card span { font-size:1rem; font-weight:700; color:#fff; }
+.card.purple  { background:linear-gradient(135deg,#5b1fe0,#9b4dff); }
+.card.darkred { background:linear-gradient(135deg,#6b1212,#b03030); }
+.card.green   { background:linear-gradient(135deg,#0d6b2a,#25a854); }
+.card.blue    { background:linear-gradient(135deg,#0d3f8f,#2870d4); }
+.card.orange  { background:linear-gradient(135deg,#8f4a0d,#d47a28); }
+.card.teal    { background:linear-gradient(135deg,#0d6b60,#28c4b0); }
+
+/* BOTTOM NAV */
+.bottom-nav { position:fixed; bottom:0; left:0; right:0; background:var(--bg2); display:flex; align-items:center; justify-content:space-around; padding:10px 0 20px; border-top:1px solid rgba(255,255,255,0.08); z-index:100; }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--text2); font-size:0.7rem; padding:4px 10px; cursor:pointer; }
+.nav-item i { font-size:1.2rem; }
+.nav-item.active { color:var(--accent); }
+.center-btn { width:56px; height:56px; background:linear-gradient(135deg,#bf8a1a,#f0b730); border-radius:50%; color:#fff !important; font-size:1.4rem !important; box-shadow:0 4px 15px rgba(191,138,26,0.5); margin-top:-20px; display:flex; align-items:center; justify-content:center; }
+.center-btn span { display:none; }
+
+/* PAGE */
+.page { display:none; }
+.page.active { display:block; }
+.page-header { display:flex; align-items:center; gap:12px; padding:20px 16px; background:var(--bg2); position:sticky; top:0; z-index:50; border-bottom:1px solid rgba(255,255,255,0.07); }
+.back-btn { color:var(--accent); font-size:1.3rem; cursor:pointer; background:none; border:none; }
+.page-header h2 { font-size:1.2rem; color:var(--text); flex:1; }
+
+/* SEARCH */
+.search-bar { margin:12px 16px; background:var(--bg2); border-radius:14px; display:flex; align-items:center; gap:10px; padding:10px 16px; border:1px solid rgba(255,255,255,0.07); }
+.search-bar input { background:transparent; border:none; outline:none; color:var(--text); font-size:0.9rem; flex:1; text-align:right; }
+.search-bar i { color:var(--text2); }
+
+/* LIVE */
+.live-status { display:flex; align-items:center; gap:8px; padding:12px 16px; background:rgba(255,0,80,0.1); margin:12px 16px; border-radius:12px; border:1px solid rgba(255,0,80,0.3); font-size:0.85rem; }
+.live-dot { width:10px; height:10px; border-radius:50%; background:#ff0050; animation:blink 1s infinite; flex-shrink:0; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+.channel-list { padding:0 16px; display:flex; flex-direction:column; gap:12px; }
+.channel-card { background:var(--bg2); border-radius:16px; padding:14px 16px; display:flex; align-items:center; gap:14px; border:1px solid rgba(255,255,255,0.06); }
+.channel-avatar { width:52px; height:52px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; flex-shrink:0; }
+.channel-info h3 { font-size:0.95rem; margin-bottom:4px; }
+.channel-info p { font-size:0.75rem; color:var(--text2); }
+.viewers { margin-right:auto; color:#ff0050; font-size:0.78rem; display:flex; align-items:center; gap:4px; }
+
+/* CINEMA */
+.movie-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; padding:0 16px; }
+.movie-card { border-radius:16px; overflow:hidden; background:var(--bg2); border:1px solid rgba(255,255,255,0.07); }
+.movie-thumb { width:100%; height:130px; display:flex; align-items:center; justify-content:center; font-size:3rem; }
+.movie-info { padding:10px; }
+.movie-info h4 { font-size:0.85rem; margin-bottom:4px; }
+.movie-info p { font-size:0.72rem; color:var(--text2); }
+
+/* WALKIE */
+.walkie-container { display:flex; flex-direction:column; align-items:center; padding:30px 20px; gap:20px; }
+.ptt-btn { width:160px; height:160px; border-radius:50%; background:linear-gradient(135deg,#1a8b3a,#25d460); display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:3rem; color:#fff; cursor:pointer; box-shadow:0 0 40px rgba(37,212,96,0.4),0 8px 20px rgba(0,0,0,0.4); transition:transform 0.1s; border:none; outline:none; user-select:none; }
+.ptt-btn p { font-size:0.8rem; margin-top:8px; }
+.ptt-btn:active { transform:scale(0.93); }
+.users-online { width:100%; background:var(--bg2); border-radius:16px; padding:14px; }
+.users-online h3 { font-size:0.9rem; color:var(--text2); margin-bottom:12px; }
+.user-row { display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05); }
+.user-avatar { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.1rem; }
+.user-row h4 { font-size:0.88rem; }
+.user-row p { font-size:0.72rem; color:var(--text2); }
+.online-dot { width:8px; height:8px; border-radius:50%; background:#25d460; margin-right:auto; }
+
+/* CHAT */
+.chat-list { padding:0 16px; display:flex; flex-direction:column; gap:4px; }
+.chat-item { display:flex; align-items:center; gap:14px; padding:12px 10px; border-radius:14px; cursor:pointer; }
+.chat-item:hover { background:var(--bg2); }
+.chat-avatar { width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0; }
+.chat-item h4 { font-size:0.92rem; margin-bottom:3px; }
+.chat-item p { font-size:0.75rem; color:var(--text2); }
+.chat-meta { margin-right:auto; text-align:left; display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
+.chat-meta span { font-size:0.7rem; color:var(--text2); }
+.badge { background:var(--accent); color:#000; border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:700; }
+
+/* PROFILE */
+.profile-hero { display:flex; flex-direction:column; align-items:center; padding:30px 20px 20px; gap:12px; }
+.avatar-big { width:90px; height:90px; border-radius:50%; background:linear-gradient(135deg,#7b2fff,var(--accent)); display:flex; align-items:center; justify-content:center; font-size:2.5rem; box-shadow:0 0 30px rgba(75,195,247,0.3); }
+.profile-hero h2 { font-size:1.4rem; }
+.profile-hero p { color:var(--text2); font-size:0.85rem; }
+.stats-row { display:flex; justify-content:space-around; background:var(--bg2); margin:0 16px 20px; border-radius:16px; padding:16px; }
+.stat { text-align:center; }
+.stat h3 { font-size:1.3rem; color:var(--accent); }
+.stat p { font-size:0.72rem; color:var(--text2); }
+.menu-list { padding:0 16px; display:flex; flex-direction:column; gap:4px; }
+.menu-item { display:flex; align-items:center; gap:14px; padding:14px 12px; background:var(--bg2); border-radius:14px; cursor:pointer; color:var(--text); }
+.menu-item i { font-size:1.1rem; color:var(--accent); width:24px; }
+.menu-item span { font-size:0.92rem; flex:1; }
+
+/* SETTINGS */
+.section-title { padding:16px 16px 8px; color:var(--text2); font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; }
+.toggle-row { display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background:var(--bg2); margin:4px 16px; border-radius:14px; }
+.toggle-row span { font-size:0.9rem; }
+.toggle { width:46px; height:26px; background:#334; border-radius:13px; position:relative; cursor:pointer; transition:background 0.3s; flex-shrink:0; }
+.toggle.on { background:var(--accent); }
+.toggle::after { content:''; position:absolute; width:20px; height:20px; background:#fff; border-radius:50%; top:3px; left:3px; transition:left 0.3s; }
+.toggle.on::after { left:23px; }
+
+/* NOTIFICATIONS */
+.notif-list { padding:0 16px; display:flex; flex-direction:column; gap:8px; }
+.notif-item { display:flex; gap:12px; background:var(--bg2); border-radius:14px; padding:14px; align-items:flex-start; }
+.notif-icon { width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+.notif-item h4 { font-size:0.88rem; margin-bottom:4px; }
+.notif-item p { font-size:0.75rem; color:var(--text2); }
+.notif-time { font-size:0.7rem; color:#556; white-space:nowrap; }
+
+/* NEARBY */
+.radar-container { display:flex; flex-direction:column; align-items:center; padding:30px 20px; }
+.radar { width:220px; height:220px; border-radius:50%; border:2px solid rgba(75,195,247,0.3); position:relative; display:flex; align-items:center; justify-content:center; margin-bottom:30px; }
+.radar::before,.radar::after { content:''; position:absolute; border-radius:50%; border:1px solid rgba(75,195,247,0.2); }
+.radar::before { width:65%; height:65%; }
+.radar::after { width:33%; height:33%; }
+.radar-dot { width:12px; height:12px; border-radius:50%; background:var(--accent); position:absolute; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(75,195,247,0.6)} 50%{box-shadow:0 0 0 10px rgba(75,195,247,0)} }
+.nearby-users { width:100%; display:flex; flex-direction:column; gap:10px; }
+
+/* FILES */
+.file-list { padding:0 16px; display:flex; flex-direction:column; gap:10px; }
+.file-item { display:flex; align-items:center; gap:14px; background:var(--bg2); border-radius:14px; padding:14px; }
+.file-icon { width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0; }
+.file-item h4 { font-size:0.88rem; margin-bottom:3px; }
+.file-item p { font-size:0.73rem; color:var(--text2); }
+.file-size { margin-right:auto; font-size:0.75rem; color:var(--text2); white-space:nowrap; }
+
+/* GAMES */
+.games-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; padding:0 16px; }
+.game-card { border-radius:18px; padding:24px 14px; display:flex; flex-direction:column; align-items:center; gap:10px; cursor:pointer; transition:transform 0.15s; }
+.game-card:active { transform:scale(0.95); }
+.game-card i { font-size:2.4rem; }
+.game-card h4 { font-size:0.9rem; font-weight:700; text-align:center; }
+.game-card p { font-size:0.72rem; color:rgba(255,255,255,0.7); }
+
+/* CATS */
+.cats { display:flex; gap:10px; padding:12px 16px; overflow-x:auto; }
+.cat-btn { background:var(--bg2); color:#fff; border:1px solid #334; padding:7px 18px; border-radius:20px; font-size:0.82rem; white-space:nowrap; cursor:pointer; font-family:inherit; }
+.cat-btn.active { background:var(--accent); color:#000; border-color:var(--accent); }
+
+/* UPLOAD */
+.upload-area { margin:16px; border:2px dashed rgba(75,195,247,0.3); border-radius:16px; padding:28px; text-align:center; cursor:pointer; }
+
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:#334; border-radius:2px; }
+</style>
+</head>
+<body>
+
+<!-- ========== HOME PAGE ========== -->
+<div id="home" class="page active">
+  <header class="header">
+    <div class="logo">
+      <h1>Rabah<span>Dj</span></h1>
+      <div class="underline-logo"></div>
+      <p class="slogan">شبكتك الاجتماعية المحلية</p>
+    </div>
+  </header>
+  <div class="info-bar">
+    <i class="fa fa-wifi" style="color:#aaa"></i>
+    <p>اتصل، شارك، وابث صوتاً وفيديو مع أصدقاء</p>
+  </div>
+  <div class="info-bar sub">
+    <p>عبر شبكتك المحلية بدون إنترنت</p>
+  </div>
+  <main class="grid">
+    <div onclick="showPage('live')" class="card purple">
+      <div class="card-icon"><i class="fa fa-podcast"></i></div>
+      <span>بث مباشر</span>
+    </div>
+    <div onclick="showPage('cinema')" class="card darkred">
+      <div class="card-icon"><i class="fa fa-film"></i></div>
+      <span>سينما وتلفاز</span>
+    </div>
+    <div onclick="showPage('walkie')" class="card green">
+      <div class="card-icon"><i class="fa fa-microphone"></i></div>
+      <span>تخاطب لاسلكي</span>
+    </div>
+    <div onclick="showPage('chat')" class="card blue">
+      <div class="card-icon"><i class="fa fa-comment-dots"></i></div>
+      <span>محادثات فورية</span>
+    </div>
+    <div onclick="showPage('files')" class="card orange">
+      <div class="card-icon"><i class="fa fa-folder-open"></i></div>
+      <span>مشاركة ملفات</span>
+    </div>
+    <div onclick="showPage('games')" class="card teal">
+      <div class="card-icon"><i class="fa fa-gamepad"></i></div>
+      <span>ألعاب جماعية</span>
+    </div>
+  </main>
+</div>
+
+<!-- ========== LIVE PAGE ========== -->
+<div id="live" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('home')"><i class="fa fa-arrow-right"></i></button>
+    <h2>بث مباشر</h2>
+    <i class="fa fa-plus" style="color:var(--accent)"></i>
+  </div>
+  <div class="live-status">
+    <div class="live-dot"></div>
+    <span>3 بث نشط الآن على شبكتك</span>
+  </div>
+  <div class="search-bar">
+    <i class="fa fa-search"></i>
+    <input type="text" placeholder="ابحث عن بث..."/>
+  </div>
+  <div class="channel-list">
+    <div class="channel-card">
+      <div class="channel-avatar" style="background:linear-gradient(135deg,#7b2fff,#c084fc)">🎵</div>
+      <div class="channel-info"><h3>أحمد DJ - موسيقى</h3><p>بث موسيقى حي | جاري البث</p></div>
+      <div class="viewers"><i class="fa fa-eye"></i> 24</div>
+    </div>
+    <div class="channel-card">
+      <div class="channel-avatar" style="background:linear-gradient(135deg,#bf6a1a,#f0b730)">🎮</div>
+      <div class="channel-info"><h3>رياض - العاب</h3><p>بث مباشر | FIFA 2024</p></div>
+      <div class="viewers"><i class="fa fa-eye"></i> 11</div>
+    </div>
+    <div class="channel-card">
+      <div class="channel-avatar" style="background:linear-gradient(135deg,#0d6b60,#28c4b0)">📚</div>
+      <div class="channel-info"><h3>فاطمة - دروس</h3><p>شرح مادة الرياضيات</p></div>
+      <div class="viewers"><i class="fa fa-eye"></i> 8</div>
+    </div>
+    <div class="channel-card">
+      <div class="channel-avatar" style="background:linear-gradient(135deg,#8b1a1a,#d44040)">🎤</div>
+      <div class="channel-info"><h3>كريم - كوميديا</h3><p>مباشر الآن | ضحك بلا حدود</p></div>
+      <div class="viewers"><i class="fa fa-eye"></i> 37</div>
+    </div>
+    <div class="channel-card">
+      <div class="channel-avatar" style="background:linear-gradient(135deg,#0d3f8f,#2870d4)">🏀</div>
+      <div class="channel-info"><h3>يوسف - رياضة</h3><p>تعليق مباراة كرة السلة</p></div>
+      <div class="viewers"><i class="fa fa-eye"></i> 15</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== CINEMA PAGE ========== -->
+<div id="cinema" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('home')"><i class="fa fa-arrow-right"></i></button>
+    <h2>سينما وتلفاز</h2>
+    <i class="fa fa-search" style="color:var(--accent)"></i>
+  </div>
+  <div class="cats">
+    <button class="cat-btn active">الكل</button>
+    <button class="cat-btn">أفلام</button>
+    <button class="cat-btn">مسلسلات</button>
+    <button class="cat-btn">وثائقي</button>
+    <button class="cat-btn">أطفال</button>
+  </div>
+  <div style="padding:0 16px 8px;font-size:0.85rem;color:var(--text2)">المتاح على شبكتك (6)</div>
+  <div class="movie-grid">
+    <div class="movie-card">
+      <div class="movie-thumb" style="background:linear-gradient(135deg,#1a1a4a,#3a3a8a)">🎬</div>
+      <div class="movie-info"><h4>فيلم الخيال</h4><p>خيال علمي • 2h 10m</p></div>
+    </div>
+    <div class="movie-card">
+      <div class="movie-thumb" style="background:linear-gradient(135deg,#4a1a1a,#8a3a3a)">🎭</div>
+      <div class="movie-info"><h4>مسلسل العائلة</h4><p>دراما • 45 دقيقة</p></div>
+    </div>
+    <div class="movie-card">
+      <div class="movie-thumb" style="background:linear-gradient(135deg,#1a4a1a,#3a8a3a)">🦁</div>
+      <div class="movie-info"><h4>الطبيعة</h4><p>وثائقي • 1h 30m</p></div>
+    </div>
+    <div class="movie-card">
+      <div class="movie-thumb" style="background:linear-gradient(135deg,#4a3a1a,#8a703a)">⚡</div>
+      <div class="movie-info"><h4>الأبطال</h4><p>أكشن • 2h 5m</p></div>
+    </div>
+    <div class="movie-card">
+      <div class="movie-thumb" style="background:linear-gradient(135deg,#1a3a4a,#3a708a)">🚀</div>
+      <div class="movie-info"><h4>الفضاء</h4><p>مغامرة • 1h 50m</p></div>
+    </div>
+    <div class="movie-card">
+      <div class="movie-thumb" style="background:linear-gradient(135deg,#3a1a4a,#703a8a)">😂</div>
+      <div class="movie-info"><h4>كوميديا</h4><p>كوميدي • 1h 20m</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== WALKIE PAGE ========== -->
+<div id="walkie" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('home')"><i class="fa fa-arrow-right"></i></button>
+    <h2>تخاطب لاسلكي</h2>
+    <i class="fa fa-sliders-h" style="color:var(--accent)"></i>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin:12px 16px;background:var(--bg2);border-radius:14px;padding:12px 16px;">
+    <i class="fa fa-chevron-right" style="color:var(--accent);cursor:pointer"></i>
+    <div style="text-align:center">
+      <div style="font-size:0.75rem;color:var(--text2)">القناة</div>
+      <div style="font-size:1.4rem;font-weight:900;color:var(--accent)">01</div>
+    </div>
+    <i class="fa fa-chevron-left" style="color:var(--accent);cursor:pointer"></i>
+  </div>
+  <div class="walkie-container">
+    <button class="ptt-btn" id="pttBtn">
+      <i class="fa fa-microphone"></i>
+      <p>اضغط للكلام</p>
+    </button>
+    <div style="text-align:center;color:var(--text2);font-size:0.82rem">اضغط مع الاستمرار للإرسال • اترك للاستقبال</div>
+    <div class="users-online">
+      <h3><i class="fa fa-users" style="margin-left:6px"></i> المستخدمون النشطون (4)</h3>
+      <div class="user-row">
+        <div class="user-avatar" style="background:linear-gradient(135deg,#7b2fff,#c084fc)">👤</div>
+        <div><h4>محمد</h4><p>القناة 01</p></div>
+        <div class="online-dot"></div>
+      </div>
+      <div class="user-row">
+        <div class="user-avatar" style="background:linear-gradient(135deg,#bf6a1a,#f0b730)">👤</div>
+        <div><h4>سارة</h4><p>القناة 01</p></div>
+        <div class="online-dot"></div>
+      </div>
+      <div class="user-row">
+        <div class="user-avatar" style="background:linear-gradient(135deg,#0d6b2a,#25a854)">👤</div>
+        <div><h4>عمر</h4><p>القناة 01</p></div>
+        <div class="online-dot"></div>
+      </div>
+      <div class="user-row">
+        <div class="user-avatar" style="background:linear-gradient(135deg,#0d3f8f,#2870d4)">👤</div>
+        <div><h4>ليلى</h4><p>القناة 01</p></div>
+        <div class="online-dot"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== CHAT PAGE ========== -->
+<div id="chat" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('home')"><i class="fa fa-arrow-right"></i></button>
+    <h2>المحادثات</h2>
+    <i class="fa fa-edit" style="color:var(--accent)"></i>
+  </div>
+  <div class="search-bar">
+    <i class="fa fa-search"></i>
+    <input type="text" placeholder="ابحث في المحادثات..."/>
+  </div>
+  <div class="chat-list">
+    <div class="chat-item">
+      <div class="chat-avatar" style="background:linear-gradient(135deg,#7b2fff,#c084fc)">😊</div>
+      <div><h4>أحمد رضا</h4><p>هل أنت متاح الآن؟</p></div>
+      <div class="chat-meta"><span>00:15</span><div class="badge">3</div></div>
+    </div>
+    <div class="chat-item">
+      <div class="chat-avatar" style="background:linear-gradient(135deg,#bf6a1a,#f0b730)">😄</div>
+      <div><h4>فاطمة علي</h4><p>شكراً جزيلاً 🙏</p></div>
+      <div class="chat-meta"><span>23:50</span><div class="badge">1</div></div>
+    </div>
+    <div class="chat-item">
+      <div class="chat-avatar" style="background:linear-gradient(135deg,#0d6b2a,#25a854)">🏠</div>
+      <div><h4>مجموعة الحي</h4><p>كريم: موعد الاجتماع غداً</p></div>
+      <div class="chat-meta"><span>23:30</span><div class="badge">7</div></div>
+    </div>
+    <div class="chat-item">
+      <div class="chat-avatar" style="background:linear-gradient(135deg,#0d3f8f,#2870d4)">😎</div>
+      <div><h4>يوسف خالد</h4><p>حسناً سأكون هناك</p></div>
+      <div class="chat-meta"><span>22:10</span></div>
+    </div>
+    <div class="chat-item">
+      <div class="chat-avatar" style="background:linear-gradient(135deg,#8b1a1a,#d44040)">🎵</div>
+      <div><h4>نادي الموسيقى</h4><p>تم مشاركة ملف صوتي</p></div>
+      <div class="chat-meta"><span>21:45</span><div class="badge">2</div></div>
+    </div>
+    <div class="chat-item">
+      <div class="chat-avatar" style="background:linear-gradient(135deg,#1a8b7a,#28c4b0)">😍</div>
+      <div><h4>سلمى محمد</h4><p>أنت: تمام! 👍</p></div>
+      <div class="chat-meta"><span>أمس</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== FILES PAGE ========== -->
+<div id="files" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('home')"><i class="fa fa-arrow-right"></i></button>
+    <h2>مشاركة الملفات</h2>
+    <i class="fa fa-upload" style="color:var(--accent)"></i>
+  </div>
+  <div class="upload-area">
+    <i class="fa fa-cloud-upload-alt" style="font-size:2.5rem;color:var(--accent);margin-bottom:10px;display:block"></i>
+    <p style="color:var(--text2);font-size:0.85rem">اضغط لمشاركة ملف</p>
+  </div>
+  <div class="section-title">الملفات المشتركة (5)</div>
+  <div class="file-list">
+    <div class="file-item">
+      <div class="file-icon" style="background:rgba(123,47,255,0.2);color:#c084fc"><i class="fa fa-music"></i></div>
+      <div style="flex:1"><h4>موسيقى_ربيع.mp3</h4><p>من: أحمد • منذ 5 دقائق</p></div>
+      <span class="file-size">4.2 MB</span>
+    </div>
+    <div class="file-item">
+      <div class="file-icon" style="background:rgba(255,100,100,0.2);color:#ff6464"><i class="fa fa-file-pdf"></i></div>
+      <div style="flex:1"><h4>وثيقة_مهمة.pdf</h4><p>من: سارة • منذ 20 دقيقة</p></div>
+      <span class="file-size">1.8 MB</span>
+    </div>
+    <div class="file-item">
+      <div class="file-icon" style="background:rgba(40,196,176,0.2);color:#28c4b0"><i class="fa fa-image"></i></div>
+      <div style="flex:1"><h4>صورة_ذكرى.jpg</h4><p>من: نادية • منذ ساعة</p></div>
+      <span class="file-size">2.1 MB</span>
+    </div>
+    <div class="file-item">
+      <div class="file-icon" style="background:rgba(191,138,26,0.2);color:#f0b730"><i class="fa fa-video"></i></div>
+      <div style="flex:1"><h4>فيديو_مضحك.mp4</h4><p>من: عمر • منذ 2 ساعات</p></div>
+      <span class="file-size">45 MB</span>
+    </div>
+    <div class="file-item">
+      <div class="file-icon" style="background:rgba(40,112,212,0.2);color:#4fc3f7"><i class="fa fa-file-archive"></i></div>
+      <div style="flex:1"><h4>مشروع.zip</h4><p>من: محمد • أمس</p></div>
+      <span class="file-size">12 MB</span>
+    </div>
+  </div>
+</div>
+
+<!-- ========== GAMES PAGE ========== -->
+<div id="games" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('home')"><i class="fa fa-arrow-right"></i></button>
+    <h2>ألعاب جماعية</h2>
+  </div>
+  <div style="padding:12px 16px;color:var(--text2);font-size:0.85rem">العب مع أصدقائك على نفس الشبكة!</div>
+  <div class="games-grid">
+    <div class="game-card" style="background:linear-gradient(135deg,#1a1a5a,#3030a0)">
+      <i class="fa fa-chess" style="color:#a0c0ff"></i><h4>الشطرنج</h4><p>لاعبان</p>
+    </div>
+    <div class="game-card" style="background:linear-gradient(135deg,#3a1a0a,#8a4010)">
+      <i class="fa fa-dice" style="color:#ffa060"></i><h4>الطاولة</h4><p>لاعبان</p>
+    </div>
+    <div class="game-card" style="background:linear-gradient(135deg,#0a3a1a,#108040)">
+      <i class="fa fa-table-tennis" style="color:#60ffa0"></i><h4>بينج بونج</h4><p>لاعبان</p>
+    </div>
+    <div class="game-card" style="background:linear-gradient(135deg,#3a0a2a,#801060)">
+      <i class="fa fa-puzzle-piece" style="color:#ff80e0"></i><h4>تريفيا</h4><p>4 لاعبين</p>
+    </div>
+    <div class="game-card" style="background:linear-gradient(135deg,#1a3a0a,#508010)">
+      <i class="fa fa-leaf" style="color:#c0ff60"></i><h4>المزرعة</h4><p>جماعي</p>
+    </div>
+    <div class="game-card" style="background:linear-gradient(135deg,#0a2a3a,#107080)">
+      <i class="fa fa-ship" style="color:#60e0ff"></i><h4>حرب السفن</h4><p>لاعبان</p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PROFILE PAGE ========== -->
+<div id="profile" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('home')"><i class="fa fa-arrow-right"></i></button>
+    <h2>ملفي الشخصي</h2>
+    <i class="fa fa-pen" style="color:var(--accent)"></i>
+  </div>
+  <div class="profile-hero">
+    <div class="avatar-big">👤</div>
+    <h2>ربـاح</h2>
+    <p>@rabahdj • متصل الآن</p>
+    <span style="background:rgba(75,195,247,0.15);color:var(--accent);padding:4px 14px;border-radius:20px;font-size:0.75rem">
+      <i class="fa fa-wifi"></i> شبكة محلية
+    </span>
+  </div>
+  <div class="stats-row">
+    <div class="stat"><h3>47</h3><p>أصدقاء</p></div>
+    <div class="stat"><h3>12</h3><p>بث</p></div>
+    <div class="stat"><h3>238</h3><p>رسائل</p></div>
+  </div>
+  <div class="menu-list">
+    <div class="menu-item"><i class="fa fa-user-edit"></i><span>تعديل الملف</span><i class="fa fa-chevron-left" style="color:var(--text2)"></i></div>
+    <div class="menu-item"><i class="fa fa-users"></i><span>أصدقائي</span><i class="fa fa-chevron-left" style="color:var(--text2)"></i></div>
+    <div class="menu-item"><i class="fa fa-history"></i><span>سجل النشاط</span><i class="fa fa-chevron-left" style="color:var(--text2)"></i></div>
+    <div class="menu-item"><i class="fa fa-shield-alt"></i><span>الخصوصية</span><i class="fa fa-chevron-left" style="color:var(--text2)"></i></div>
+    <div class="menu-item" style="color:#ff4444"><i class="fa fa-sign-out-alt" style="color:#ff4444"></i><span>تسجيل الخروج</span><i class="fa fa-chevron-left" style="color:#ff4444"></i></div>
+  </div>
+</div>
+
+<!-- ========== NOTIFICATIONS PAGE ========== -->
+<div id="notifications" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('home')"><i class="fa fa-arrow-right"></i></button>
+    <h2>الإشعارات</h2>
+    <span style="font-size:0.78rem;color:var(--accent);cursor:pointer">مسح الكل</span>
+  </div>
+  <div class="notif-list">
+    <div class="notif-item">
+      <div class="notif-icon" style="background:rgba(123,47,255,0.2);color:#c084fc"><i class="fa fa-podcast"></i></div>
+      <div style="flex:1"><h4>بدأ أحمد بثاً مباشراً</h4><p>أحمد DJ يبث الآن موسيقى حية</p></div>
+      <span class="notif-time">الآن</span>
+    </div>
+    <div class="notif-item">
+      <div class="notif-icon" style="background:rgba(37,212,96,0.2);color:#25d460"><i class="fa fa-user-plus"></i></div>
+      <div style="flex:1"><h4>طلب صداقة جديد</h4><p>سارة محمد تريد إضافتك</p></div>
+      <span class="notif-time">5 دقائق</span>
+    </div>
+    <div class="notif-item">
+      <div class="notif-icon" style="background:rgba(75,195,247,0.2);color:var(--accent)"><i class="fa fa-comment-dots"></i></div>
+      <div style="flex:1"><h4>رسالة جديدة</h4><p>فاطمة: هل أنت متاح للحديث؟</p></div>
+      <span class="notif-time">15 دقيقة</span>
+    </div>
+    <div class="notif-item">
+      <div class="notif-icon" style="background:rgba(191,106,26,0.2);color:#f0b730"><i class="fa fa-film"></i></div>
+      <div style="flex:1"><h4>فيلم جديد متاح</h4><p>تمت مشاركة فيلم جديد على الشبكة</p></div>
+      <span class="notif-time">1 ساعة</span>
+    </div>
+    <div class="notif-item">
+      <div class="notif-icon" style="background:rgba(40,108,180,0.2);color:#4fc3f7"><i class="fa fa-wifi"></i></div>
+      <div style="flex:1"><h4>مستخدم جديد قريب</h4><p>كريم انضم إلى شبكتك المحلية</p></div>
+      <span class="notif-time">2 ساعات</span>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SETTINGS PAGE ========== -->
+<div id="settings" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('home')"><i class="fa fa-arrow-right"></i></button>
+    <h2>الإعدادات</h2>
+  </div>
+  <div class="section-title">الشبكة</div>
+  <div class="toggle-row">
+    <div style="display:flex;align-items:center;gap:10px"><i class="fa fa-wifi" style="color:var(--accent)"></i><span>الكشف التلقائي</span></div>
+    <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+  </div>
+  <div class="toggle-row">
+    <div style="display:flex;align-items:center;gap:10px"><i class="fa fa-bluetooth-b" style="color:var(--accent)"></i><span>البلوتوث</span></div>
+    <div class="toggle" onclick="this.classList.toggle('on')"></div>
+  </div>
+  <div class="section-title">الإشعارات</div>
+  <div class="toggle-row">
+    <div style="display:flex;align-items:center;gap:10px"><i class="fa fa-bell" style="color:var(--accent)"></i><span>إشعارات الرسائل</span></div>
+    <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+  </div>
+  <div class="toggle-row">
+    <div style="display:flex;align-items:center;gap:10px"><i class="fa fa-podcast" style="color:var(--accent)"></i><span>إشعارات البث</span></div>
+    <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+  </div>
+  <div class="section-title">المظهر</div>
+  <div class="toggle-row">
+    <div style="display:flex;align-items:center;gap:10px"><i class="fa fa-moon" style="color:var(--accent)"></i><span>الوضع الداكن</span></div>
+    <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+  </div>
+  <div style="text-align:center;padding:30px;color:#445;font-size:0.8rem">RabahDj v1.0.0 • شبكتك المحلية</div>
+</div>
+
+<!-- ========== NEARBY PAGE ========== -->
+<div id="nearby" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('home')"><i class="fa fa-arrow-right"></i></button>
+    <h2>المجاورون</h2>
+  </div>
+  <div class="radar-container">
+    <div class="radar">
+      <div class="radar-dot" style="top:30%;left:60%"></div>
+      <div class="radar-dot" style="top:65%;left:35%;animation-delay:0.5s"></div>
+      <div class="radar-dot" style="top:45%;left:20%;animation-delay:1s"></div>
+      <div style="width:14px;height:14px;border-radius:50%;background:var(--accent);box-shadow:0 0 20px var(--accent)"></div>
+    </div>
+    <div class="nearby-users">
+      <div class="channel-card">
+        <div class="channel-avatar" style="background:linear-gradient(135deg,#7b2fff,#c084fc)">👤</div>
+        <div class="channel-info"><h3>محمد</h3><p><i class="fa fa-map-marker-alt"></i> ~15 متر</p></div>
+        <button style="background:var(--accent);color:#000;border:none;padding:7px 16px;border-radius:20px;font-size:0.8rem;cursor:pointer;font-family:inherit">تواصل</button>
+      </div>
+      <div class="channel-card">
+        <div class="channel-avatar" style="background:linear-gradient(135deg,#bf6a1a,#f0b730)">👤</div>
+        <div class="channel-info"><h3>نادية</h3><p><i class="fa fa-map-marker-alt"></i> ~28 متر</p></div>
+        <button style="background:var(--accent);color:#000;border:none;padding:7px 16px;border-radius:20px;font-size:0.8rem;cursor:pointer;font-family:inherit">تواصل</button>
+      </div>
+      <div class="channel-card">
+        <div class="channel-avatar" style="background:linear-gradient(135deg,#0d6b2a,#25a854)">👤</div>
+        <div class="channel-info"><h3>علي</h3><p><i class="fa fa-map-marker-alt"></i> ~45 متر</p></div>
+        <button style="background:var(--accent);color:#000;border:none;padding:7px 16px;border-radius:20px;font-size:0.8rem;cursor:pointer;font-family:inherit">تواصل</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== BOTTOM NAV ========== -->
+<nav class="bottom-nav">
+  <div onclick="showPage('home')" class="nav-item" id="nav-home">
+    <i class="fa fa-home"></i><span>الرئيسية</span>
+  </div>
+  <div onclick="showPage('profile')" class="nav-item" id="nav-profile">
+    <i class="fa fa-user"></i><span>ملفي</span>
+  </div>
+  <div onclick="showPage('nearby')" class="nav-item center-btn" id="nav-nearby">
+    <i class="fa fa-wifi"></i>
+  </div>
+  <div onclick="showPage('notifications')" class="nav-item" id="nav-notifications">
+    <i class="fa fa-bell"></i><span>إشعارات</span>
+  </div>
+  <div onclick="showPage('settings')" class="nav-item" id="nav-settings">
+    <i class="fa fa-cog"></i><span>الإعدادات</span>
+  </div>
+</nav>
+
+<script>
+// Show page function
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const page = document.getElementById(id);
+  if (page) {
+    page.classList.add('active');
+    page.scrollTop = 0;
+    window.scrollTo(0, 0);
+  }
+  const nav = document.getElementById('nav-' + id);
+  if (nav) nav.classList.add('active');
+  else document.getElementById('nav-home').classList.add('active');
+}
+
+// Categories
+document.querySelectorAll('.cat-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// PTT button
+const ptt = document.getElementById('pttBtn');
+if (ptt) {
+  const p = ptt.querySelector('p');
+  ptt.addEventListener('mousedown', () => {
+    ptt.style.background = 'linear-gradient(135deg,#0d5a27,#1da84a)';
+    p.textContent = '🔴 جاري الإرسال...';
+  });
+  ptt.addEventListener('mouseup', () => {
+    ptt.style.background = '';
+    p.textContent = 'اضغط للكلام';
+  });
+  ptt.addEventListener('touchstart', e => {
+    e.preventDefault();
+    ptt.style.background = 'linear-gradient(135deg,#0d5a27,#1da84a)';
+    p.textContent = '🔴 جاري الإرسال...';
+  });
+  ptt.addEventListener('touchend', () => {
+    ptt.style.background = '';
+    p.textContent = 'اضغط للكلام';
+  });
+}
+
+// Loaded
+window.addEventListener('load', () => {
+  document.body.classList.add('loaded');
+  document.getElementById('nav-home').classList.add('active');
+});
+</script>
+</body>
+</html>
