@@ -3,192 +3,85 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>رباح</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet"/>
+<title>رباح - الواجهة الحية</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap" rel="stylesheet"/>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
-    background-color: #080c14;
-    background-image: radial-gradient(circle at 20% 30%, #121b2e 0%, #080c14 70%);
+    font-family: 'Cairo', sans-serif;
+    background: #050a14;
     color: #fff;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 60px 20px 40px;
+    justify-content: center;
+    overflow-x: hidden;
+    padding: 30px 16px;
+  }
+
+  /* خلفية متحركة */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 20% 20%, #0f2b4d 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, #2a0f1d 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, #0a1a2e 0%, #02060d 100%);
+    animation: bgMove 20s ease-in-out infinite alternate;
+    z-index: -2;
+  }
+
+  @keyframes bgMove {
+    0% { transform: translate(0,0); }
+    100% { transform: translate(-5%,-5%); }
   }
 
   /* شبكة البطاقات */
-  .cards-grid {
+  .grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 22px;
+    gap: 24px;
     max-width: 400px;
     width: 100%;
     margin-bottom: 50px;
+    z-index: 1;
   }
 
-  /* البطاقة الزجاجية */
-  .glass-btn {
+  /* البطاقة - مع طفو ونبض */
+  .card {
     position: relative;
     overflow: hidden;
-    width: 100%;
     aspect-ratio: 1 / 1.05;
-    background: linear-gradient(145deg, rgba(255,255,255,0.07), rgba(255,255,255,0.015));
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 30px;
+    border-radius: 32px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 14px;
-    box-shadow: 0 12px 35px rgba(0,0,0,0.55);
-    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    cursor: pointer;
-    user-select: none;
+    gap: 16px;
     text-decoration: none;
-  }
-
-  /* أيقونة ملونة داخل البطاقة */
-  .glass-btn .icon-box {
-    width: 70px;
-    height: 70px;
-    border-radius: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 32px;
-    box-shadow: 0 8px 22px rgba(0,0,0,0.45);
-    transition: transform 0.35s ease;
-  }
-
-  /* ألوان كل بطاقة */
-  .green .icon-box { background: linear-gradient(135deg, #10b981, #047857); box-shadow: 0 8px 22px rgba(16,185,129,0.35); }
-  .red   .icon-box { background: linear-gradient(135deg, #ef4444, #b91c1c); box-shadow: 0 8px 22px rgba(239,68,68,0.35); }
-  .blue  .icon-box { background: linear-gradient(135deg, #3b82f6, #1d4ed8); box-shadow: 0 8px 22px rgba(59,130,246,0.35); }
-  .orange .icon-box { background: linear-gradient(135deg, #f97316, #c2410c); box-shadow: 0 8px 22px rgba(249,115,22,0.35); }
-
-  /* عنوان البطاقة */
-  .glass-btn h2 {
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-  }
-
-  /* تأثير المرور */
-  .glass-btn:hover {
-    transform: translateY(-10px) scale(1.04);
-    border-color: rgba(255,255,255,0.22);
-    box-shadow: 0 22px 55px rgba(0,0,0,0.7);
-  }
-  .glass-btn:hover .icon-box {
-    transform: scale(1.15) rotate(-4deg);
-  }
-
-  /* تأثير الضغط */
-  .glass-btn:active {
-    transform: translateY(-4px) scale(0.97);
-  }
-
-  /* زر ابدأ الآن */
-  .cta-btn {
-    width: 100%;
-    max-width: 380px;
-    padding: 20px;
-    font-size: 22px;
-    font-weight: 800;
     color: #fff;
-    background: linear-gradient(90deg, #3b82f6, #1d4ed8);
-    border: none;
-    border-radius: 60px;
-    box-shadow: 0 10px 35px rgba(59,130,246,0.55), inset 0 1px 0 rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    animation: float 6s ease-in-out infinite;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: inherit;
-    letter-spacing: 1px;
-  }
-  .cta-btn:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 16px 45px rgba(59,130,246,0.75);
-  }
-  .cta-btn:active {
-    transform: translateY(0);
   }
 
-  /* التذييل */
-  .footer {
-    margin-top: 45px;
-    color: #94a3b8;
-    font-size: 15px;
-    text-align: center;
-  }
-  .footer strong { color: #fbbf24; font-size: 16px; }
+  /* كل بطاقة تطفو بتوقيت مختلف */
+  .card:nth-child(1) { animation-delay: 0s; }
+  .card:nth-child(2) { animation-delay: -1.5s; }
+  .card:nth-child(3) { animation-delay: -3s; }
+  .card:nth-child(4) { animation-delay: -4.5s; }
 
-  /* تأثير Ripple */
-  .ripple {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.25);
-    transform: scale(0);
-    animation: ripple-anim 0.7s linear;
-    pointer-events: none;
-  }
-  @keyframes ripple-anim {
-    to { transform: scale(4); opacity: 0; }
-  }
-</style>
-</head>
-<body>
-
-  <div class="cards-grid">
-    <a href="#" class="glass-btn green" onclick="addRipple(event)">
-      <div class="icon-box">📡</div>
-      <h2>بث مباشر</h2>
-    </a>
-
-    <a href="#" class="glass-btn red" onclick="addRipple(event)">
-      <div class="icon-box">🎬</div>
-      <h2>سينما وتلفاز</h2>
-    </a>
-
-    <a href="#" class="glass-btn blue" onclick="addRipple(event)">
-      <div class="icon-box">💬</div>
-      <h2>محادثات فورية</h2>
-    </a>
-
-    <a href="#" class="glass-btn orange" onclick="addRipple(event)">
-      <div class="icon-box">🎮</div>
-      <h2>ألعاب</h2>
-    </a>
-  </div>
-
-  <button class="cta-btn" onclick="addRipple(event)">ابدأ الآن ←</button>
-
-  <div class="footer">
-    الدخول المسؤول <strong>●</strong> الإصدار 2.0.0
-  </div>
-
-  <script>
-    function addRipple(e) {
-      const btn = e.currentTarget;
-      const circle = document.createElement("span");
-      const d = Math.max(btn.clientWidth, btn.clientHeight);
-      const r = d / 2;
-      circle.style.width = circle.style.height = d + "px";
-      circle.style.left = (e.clientX - btn.getBoundingClientRect().left - r) + "px";
-      circle.style.top = (e.clientY - btn.getBoundingClientRect().top - r) + "px";
-      circle.classList.add("ripple");
-
-      const old = btn.getElementsByClassName("ripple")[0];
-      if (old) old.remove();
-
-      btn.appendChild(circle);
-    }
-  </script>
-
-</body>
-</html>
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: 
